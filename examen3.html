@@ -23,34 +23,44 @@
   </div>
 
   <script>
+    // Genera un número aleatorio entre 1 y 100
     let randomNumber = Math.floor(Math.random() * 100) + 1;
 
+    // Obtiene referencias a elementos HTML con clases específicas
     const guesses = document.querySelector(".guesses");
     const lastResult = document.querySelector(".lastResult");
     const lowOrHi = document.querySelector(".lowOrHi");
-
     const guessSubmit = document.querySelector(".guessSubmit");
     const guessField = document.querySelector(".guessField");
 
+    // Inicializa variables para contar el número de intentos y para el botón de reinicio
     let guessCount = 1;
     let resetButton;
 
+    // Función para verificar la suposición del usuario
     function checkGuess() {
+      // Obtiene el valor de la suposición del usuario como un número
       let userGuess = Number(guessField.value);
+      
+      // Verifica si es el primer intento y actualiza el mensaje de suposiciones previas
       if (guessCount === 1) {
         guesses.textContent = "Previas adivinanzas: ";
       }
       guesses.textContent += userGuess + " ";
 
+      // Compara la suposición del usuario con el número aleatorio
       if (userGuess === randomNumber) {
+        // Si coincide, muestra un mensaje de felicitaciones y llama a la función setGameOver
         lastResult.textContent = "Felicidades! Acertaste!";
         lastResult.style.backgroundColor = "green";
         lowOrHi.textContent = "";
         setGameOver();
       } else if (guessCount === 10) {
+        // Si se agotan los 10 intentos, muestra un mensaje de fin de juego y llama a la función setGameOver
         lastResult.textContent = "!!!GAME OVER!!!";
         setGameOver();
       } else {
+        // Si no coincide, muestra un mensaje de incorrecto y sugiere si la suposición es alta o baja
         lastResult.textContent = "Incorrecto!";
         lastResult.style.backgroundColor = "red";
         if (userGuess < randomNumber) {
@@ -60,42 +70,52 @@
         }
       }
 
+      // Incrementa el contador de intentos, limpia el campo de entrada y lo enfoca nuevamente
       guessCount++;
       guessField.value = "";
       guessField.focus();
     }
 
+    // Agrega un evento de clic al botón de enviar suposición para llamar a la función checkGuess
     guessSubmit.addEventListener("click", checkGuess);
 
+    // Función para establecer el fin del juego
     function setGameOver() {
+      // Deshabilita el campo de entrada y el botón de enviar suposición
       guessField.disabled = true;
       guessSubmit.disabled = true;
+      
+      // Crea un botón de reinicio, lo agrega al cuerpo del documento y agrega un evento de clic para llamar a resetGame
       resetButton = document.createElement("button");
       resetButton.textContent = "Empezar un nuevo juego";
       document.body.append(resetButton);
       resetButton.addEventListener("click", resetGame);
     }
 
+    // Función para reiniciar el juego
     function resetGame() {
+      // Reinicia el contador de intentos y limpia los mensajes anteriores
       guessCount = 1;
-
       const resetParas = document.querySelectorAll(".resultParas p");
       for (let i = 0; i < resetParas.length; i++) {
         resetParas[i].textContent = "";
       }
-
+      
+      // Elimina el botón de reinicio
       resetButton.parentNode.removeChild(resetButton);
-
+      
+      // Habilita el campo de entrada y el botón de enviar suposición, limpia el campo y lo enfoca nuevamente
       guessField.disabled = false;
       guessSubmit.disabled = false;
       guessField.value = "";
       guessField.focus();
-
+      
+      // Restablece el color de fondo del mensaje de resultado y genera un nuevo número aleatorio
       lastResult.style.backgroundColor = "white";
-
       randomNumber = Math.floor(Math.random() * 100) + 1;
     }
 
+    // Establece el enfoque inicial en el campo de entrada
     guessField.focus();
   </script>
 </body>
